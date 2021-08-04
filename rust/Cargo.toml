@@ -23,4 +23,5 @@ members = [
     "grains",
     "matching-brackets",
     "nucleotide-count",
+    "etl",
 ]
