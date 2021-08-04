@@ -1,0 +1,25 @@
+
+[workspace]
+members = [
+    "armstrong-numbers",
+    "beer-song",
+    "bob",
+    "clock",
+    "difference-of-squares",
+    "dot-dsl",
+    "gigasecond",
+    "hello-world",
+    "high-scores",
+    "leap",
+    "nth-prime",
+    "paasio",
+    "pascals-triangle",
+    "prime-factors",
+    "proverb",
+    "raindrops",
+    "reverse-string",
+    "simple-linked-list",
+    "sum-of-multiples",
+    "grains",
+    "matching-brackets",
+]
