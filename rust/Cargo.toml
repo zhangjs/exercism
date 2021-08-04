@@ -22,4 +22,5 @@ members = [
     "sum-of-multiples",
     "grains",
     "matching-brackets",
+    "nucleotide-count",
 ]
