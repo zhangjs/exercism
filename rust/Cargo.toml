@@ -24,4 +24,6 @@ members = [
     "matching-brackets",
     "nucleotide-count",
     "etl",
+    "acronym",
+    "sieve",
 ]
