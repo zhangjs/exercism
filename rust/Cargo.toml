@@ -30,4 +30,5 @@ members = [
     "triangle",
     "binary-search",
     "grade-school",
+    "robot-simulator",
 ]
