@@ -26,4 +26,6 @@ members = [
     "etl",
     "acronym",
     "sieve",
+    "rna-transcription",
+    "triangle",
 ]
