@@ -28,4 +28,6 @@ members = [
     "sieve",
     "rna-transcription",
     "triangle",
+    "binary-search",
+    "grade-school",
 ]
