@@ -1,41 +1,23 @@
-use std::{cmp::Ordering, collections::HashMap};
+use std::collections::HashMap;
 
 #[derive(Default)]
 struct TeamInfo {
-    play: u32,
     win: u32,
-    loss: u32,
     draw: u32,
-    points: u32,
+    loss: u32,
 }
 
 impl TeamInfo {
-    fn win(&mut self) {
-        self.play += 1;
-        self.win += 1;
-        self.points += 3;
+    fn plays(&self) -> u32 {
+        self.win + self.draw + self.loss
     }
-    fn loss(&mut self) {
-        self.play += 1;
-        self.loss += 1;
-    }
-    fn draw(&mut self) {
-        self.play += 1;
-        self.draw += 1;
-        self.points += 1;
-    }
-}
-
-fn team_cmp(team1: (&String, &TeamInfo), team2: (&String, &TeamInfo)) -> Ordering {
-    if team1.1.points == team2.1.points {
-        team1.0.cmp(&team2.0)
-    } else {
-        team2.1.points.cmp(&team1.1.points)
+    fn points(&self) -> u32 {
+        3 * self.win + self.draw
     }
 }
 
 pub fn tally(match_results: &str) -> String {
-    let mut teams: HashMap<String, TeamInfo> = HashMap::new();
+    let mut teams: HashMap<&str, TeamInfo> = HashMap::new();
 
     for line in match_results.lines() {
         let v: Vec<_> = line.split(';').collect();
@@ -45,32 +27,42 @@ pub fn tally(match_results: &str) -> String {
 
         match v[2] {
             "win" => {
-                teams.entry(v[0].to_string()).or_default().win();
-                teams.entry(v[1].to_string()).or_default().loss();
+                teams.entry(v[0]).or_default().win += 1;
+                teams.entry(v[1]).or_default().loss += 1;
             }
             "loss" => {
-                teams.entry(v[0].to_string()).or_default().loss();
-                teams.entry(v[1].to_string()).or_default().win();
+                teams.entry(v[0]).or_default().loss += 1;
+                teams.entry(v[1]).or_default().win += 1;
             }
             "draw" => {
-                teams.entry(v[0].to_string()).or_default().draw();
-                teams.entry(v[1].to_string()).or_default().draw();
+                teams.entry(v[0]).or_default().draw += 1;
+                teams.entry(v[1]).or_default().draw += 1;
             }
             _ => (),
         }
     }
 
-    let mut vp: Vec<_> = teams.iter().collect();
-    vp.sort_by(|&a, &b| team_cmp(a, b));
+    let mut vp: Vec<_> = teams.into_iter().collect();
+    vp.sort_by(|a, b| {
+        if a.1.points() == b.1.points() {
+            a.0.cmp(&b.0)
+        } else {
+            b.1.points().cmp(&a.1.points())
+        }
+    });
 
-    let head = "Team                           | MP |  W |  D |  L |  P".to_string();
-    std::iter::once(head)
-        .chain(vp.iter().map(|&(name, t)| {
-            format!(
-                "{:<31}|{:>3} |{:>3} |{:>3} |{:>3} |{:>3}",
-                name, t.play, t.win, t.draw, t.loss, t.points
-            )
-        }))
-        .collect::<Vec<_>>()
-        .join("\n")
+    let mut r = "Team                           | MP |  W |  D |  L |  P".to_string();
+    vp.iter().for_each(|(name, t)| {
+        r += &format!(
+            "\n{:<31}|{:>3} |{:>3} |{:>3} |{:>3} |{:>3}",
+            name,
+            t.plays(),
+            t.win,
+            t.draw,
+            t.loss,
+            t.points()
+        );
+    });
+
+    r
 }
