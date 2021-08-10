@@ -51,18 +51,19 @@ pub fn tally(match_results: &str) -> String {
         }
     });
 
-    let mut r = "Team                           | MP |  W |  D |  L |  P".to_string();
-    vp.iter().for_each(|(name, t)| {
-        r += &format!(
-            "\n{:<31}|{:>3} |{:>3} |{:>3} |{:>3} |{:>3}",
-            name,
-            t.plays(),
-            t.win,
-            t.draw,
-            t.loss,
-            t.points()
-        );
-    });
-
-    r
+    let head = "Team                           | MP |  W |  D |  L |  P".to_string();
+    std::iter::once(head)
+        .chain(vp.iter().map(|(name, t)| {
+            format!(
+                "{:<31}|{:>3} |{:>3} |{:>3} |{:>3} |{:>3}",
+                name,
+                t.plays(),
+                t.win,
+                t.draw,
+                t.loss,
+                t.points()
+            )
+        }))
+        .collect::<Vec<_>>()
+        .join("\n")
 }
